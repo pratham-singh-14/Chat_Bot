@@ -1,4 +1,4 @@
-# chat_with_gemini
+# Chat_with_gemini
 
 A new chat bot application.
 
