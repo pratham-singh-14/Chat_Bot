@@ -105,7 +105,7 @@ class _MyHomePageState extends ConsumerState<MyHomePage> {
                 const SizedBox(
                   width: 10,
                 ),
-                const Text("Gemini",
+                const Text("Hello, Pratham",
                     style: TextStyle(
                         color: Colors.white, fontWeight: FontWeight.bold))
               ],
@@ -118,14 +118,20 @@ class _MyHomePageState extends ConsumerState<MyHomePage> {
                   ref.read(themeProvider.notifier).toggleTheme();
                 },
                 child: (currentTheme == ThemeMode.light)
-                    ? const Icon(
-                        Icons.dark_mode_outlined,
-                        color: Colors.white,
-                      )
-                    : const Icon(
-                        Icons.light_mode_outlined,
-                        color: Colors.white,
-                      ))
+                    ? Visibility(
+                  visible: false,
+                      child: const Icon(
+                          Icons.dark_mode_outlined,
+                          color: Colors.white,
+                        ),
+                    )
+                    : Visibility(
+                  visible: true,
+                      child: const Icon(
+                          Icons.light_mode_outlined,
+                          color: Colors.white,
+                        ),
+                    ))
           ],
         ),
       ),
@@ -169,41 +175,20 @@ class _MyHomePageState extends ConsumerState<MyHomePage> {
                               ? (index == _message.length - 1)
                                   ? const SizedBox(
                                       width: 70,
-                                      height: 20,
-                                      child: SpinKitThreeBounce(
+                                      height: 20, child: SpinKitThreeBounce(
                                         size: 20,
                                         color: Colors.blue,
                                       ))
-                                  : SelectableLinkify(
-                                      text:message.text,
-                                      style: TextStyle(
-                                          color: message.isUser
-                                              ? Colors.white
-                                              : Colors.black),
-                                      showCursor: false,
-
-                                      /*toolbarOptions: ToolbarOptions(
-                         copy: true,
-                         cut: false,
-                         paste: false,
-                         selectAll: true,
-                       )*/
-                                    )
-                              : SelectableLinkify(
-                            onOpen: (link) async {
+                                  : SelectableLinkify(onOpen: (link) async {
+                            if (!await launchUrl(Uri.parse(link.url))) {
+                              throw Exception('Could not launch ${link.url}');
+                            }
+                          }, text:message.text, style: TextStyle(color: message.isUser ? Colors.white : Colors.black,), linkStyle: message.isUser ? TextStyle(color: Colors.white,decoration: TextDecoration.underline,decorationStyle: TextDecorationStyle.solid,decorationColor: Colors.white) :TextStyle(color: Colors.blue,decoration: TextDecoration.underline,decorationStyle: TextDecorationStyle.solid,decorationColor: Colors.blue),)
+                              : SelectableLinkify(onOpen: (link) async {
                               if (!await launchUrl(Uri.parse(link.url))) {
                                 throw Exception('Could not launch ${link.url}');
                               }
-                            },
-                                  text:message.text,
-                                  style: TextStyle(
-                                    color: message.isUser
-                                        ? Colors.white
-                                        : Colors.black,
-                                  ),
-                                  showCursor: false,
-                                ),
-                        )),
+                            }, text:message.text, style: TextStyle(color: message.isUser ? Colors.white : Colors.black,), linkStyle: message.isUser ? TextStyle(color: Colors.white,decoration: TextDecoration.underline,decorationStyle: TextDecorationStyle.solid,decorationColor: Colors.white) :TextStyle(color: Colors.blue,decoration: TextDecoration.underline,decorationStyle: TextDecorationStyle.solid,decorationColor: Colors.blue),),)),
                     //  leading:  !message.isUser ? CircleAvatar(child: Image.asset('assets/robot.png',width: 20,height: 20,)) : SizedBox(),
                   );
                 }),
